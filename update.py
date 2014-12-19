@@ -47,9 +47,11 @@ studied = packet['ProgressStats'][0]['timeStudied']['day']
 
 # finally, post it to beeminder via zapier
 params = {
-	'minutesStudied':int(studied//60)
+   "value": int(studied//60),                             
+   "comment": "automatic update for %s" % ((date.today() - timedelta(hours=24)).isoformat()),   
+   "requestid":(date.today() - timedelta(hours=24)).isoformat()
 }
 data = urllib.urlencode(params)
-req3 = urllib2.Request("https://zapier.com/hooks/catch/ozx9ov/", data)
+req3 = urllib2.Request("https://www.beeminder.com/api/v1/users/wefreema/goals/skritter/datapoints.json?auth_token=%s" % (os.environ["BEEMINDER_AUTH_TOKEN"]) , data)
 resp = urllib2.urlopen(req3)
 
