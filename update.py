@@ -53,4 +53,3 @@ data = urllib.urlencode(params)
 req3 = urllib2.Request("https://zapier.com/hooks/catch/ozx9ov/", data)
 resp = urllib2.urlopen(req3)
 
-print(studied)
