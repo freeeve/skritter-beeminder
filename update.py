@@ -45,7 +45,7 @@ buf = resp.read()
 packet = json.loads(buf)
 studied = packet['ProgressStats'][0]['timeStudied']['day']
 
-# finally, post it to beeminder via zapier
+# finally, post it to beeminder
 params = {
    "value": int(studied//60),                             
    "comment": "automatic update for %s" % ((date.today() - timedelta(hours=24)).isoformat()),   
