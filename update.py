@@ -1,4 +1,5 @@
 from base64 import b64encode
+import os
 import json
 import urllib
 import urllib2
@@ -8,8 +9,8 @@ url = 'https://www.skritter.com/api/v0/oauth2/token'
 OAUTH_CLIENT_NAME = os.environ['SKRITTER_API_USER'] # have to create a separate account (APICLIENT coupon code)
 OAUTH_CLIENT_SECRET = os.environ['SKRITTER_API_SECRET'] # get from client page
 
-USER_NAME = os.environ['SKRITTER_USER']     # whose account you want access to
-USER_PASSWORD = os.environ['SKRITTER_PASS']       # get from user input, don't store it
+USER_NAME = os.environ['SKRITTER_USER'] # your user
+USER_PASSWORD = os.environ['SKRITTER_PASS'] # your password
 
 params = {
 	'grant_type':  'password',
@@ -24,12 +25,13 @@ credentials = "basic %s" % credentials
 data = urllib.urlencode(params)
 request = urllib2.Request(url, data)
 
-# urllib2 apparently prepends HTTP_, your mileage may vary
 request.add_header('AUTHORIZATION', credentials)
 
 response = urllib2.urlopen(request)
 packet = json.loads(response.read())
 token = packet.get('access_token')
+
+# now that we've got a token, make the actual request to get how much time you worked yesterday (this should be run around 3AM)
 params = {
 	'start':(date.today() - timedelta(hours=24)).isoformat(),
 	'lang':'ja',
@@ -42,7 +44,7 @@ buf = resp.read()
 packet = json.loads(buf)
 studied = packet['ProgressStats'][0]['timeStudied']['day']
 
-print(int(studied//60))
+# finally, post it to beeminder via zapier
 params = {
 	'minutesStudied':int(studied//60)
 }
