@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from base64 import b64encode
 import os
 import json
@@ -34,7 +35,7 @@ token = packet.get('access_token')
 # now that we've got a token, make the actual request to get how much time you worked yesterday (this should be run around 3AM)
 params = {
 	'start':(date.today() - timedelta(hours=24)).isoformat(),
-	'lang':'ja',
+	'lang':'ja', # change language here if needed
 	'bearer_token':token
 }
 data = urllib.urlencode(params)
@@ -51,3 +52,5 @@ params = {
 data = urllib.urlencode(params)
 req3 = urllib2.Request("https://zapier.com/hooks/catch/ozx9ov/", data)
 resp = urllib2.urlopen(req3)
+
+print(studied)
